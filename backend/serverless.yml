@@ -1,0 +1,88 @@
+# backend/serverless.yml
+service: crm-backend
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    TABLE_NAME: PulseCrmTable
+    JWT_SECRET: "MY_SUPER_SECRET_KEY_CHANGE_ME"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+        - ses:SendEmail # <--- ADD THIS LINE
+        - ses:SendRawEmail # <--- ADD THIS LINE
+      Resource: "*"
+
+functions:
+  seedData:
+    handler: handler.seedData
+    events:
+      - http: { path: seed, method: post, cors: true }
+  # --- AUTH ---
+  signup:
+    handler: auth.signup
+    events:
+      - http: { path: auth/signup, method: post, cors: true }
+  login:
+    handler: auth.login
+    events:
+      - http: { path: auth/login, method: post, cors: true }
+
+  # --- LEADS ---
+  createLead:
+    handler: handler.createLead
+    events:
+      - http: { path: leads, method: post, cors: true }
+  getLeads:
+    handler: handler.getLeads
+    events:
+      - http: { path: leads, method: get, cors: true }
+  deleteLead:
+    handler: handler.deleteLead
+    events:
+      - http: { path: "leads/{id}", method: delete, cors: true }
+
+  # --- NOTES ---
+  addNote:
+    handler: handler.addNote
+    events:
+      - http: { path: "leads/{id}/notes", method: post, cors: true }
+
+  # --- SETTINGS ---
+  getSettings:
+    handler: handler.getSettings
+    events:
+      - http: { path: settings/fields, method: get, cors: true }
+  saveSettings:
+    handler: handler.saveSettings
+    events:
+      - http: { path: settings/fields, method: post, cors: true }
+  getUsers:
+    handler: handler.getUsers
+    events:
+      - http: { path: users, method: get, cors: true }
+  deleteUser:
+    handler: handler.deleteUser
+    events:
+      - http: { path: "users/{email}", method: delete, cors: true }
+resources:
+  Resources:
+    PulseCrmTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: PulseCrmTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: PK
+            AttributeType: S
+          - AttributeName: SK
+            AttributeType: S
+        KeySchema:
+          - AttributeName: PK
+            KeyType: HASH
+          - AttributeName: SK
+            KeyType: RANGE

@@ -1,0 +1,8 @@
+# .gitignore
+node_modules
+.env
+dist
+.DS_Store
+.serverless
+backend/node_modules
+backend/.serverless
