@@ -19,6 +19,7 @@ export default function LeadsManager({
   apiUrl,
   customFields = [],
 }) {
+  const safeCustomFields = Array.isArray(customFields) ? customFields : [];
   const [selectedLead, setSelectedLead] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -161,9 +162,9 @@ export default function LeadsManager({
               </div>
 
               {/* Render Custom Fields dynamically */}
-              {customFields.length > 0 && (
+              {safeCustomFields.length > 0 && (
                 <div className="grid grid-cols-2 gap-2 pt-2 border-t border-gray-100">
-                  {customFields.map((field, idx) => (
+                  {safeCustomFields.map((field, idx) => (
                     <input
                       key={idx}
                       type={field.type || "text"}
@@ -265,7 +266,7 @@ export default function LeadsManager({
 
             {/* Dynamic Fields Grid Display */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8 bg-gray-50 p-5 rounded-xl border border-gray-100">
-              {customFields.map((field) => (
+              {safeCustomFields.map((field) => (
                 <div key={field.label}>
                   <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider block mb-1">
                     {field.label}
@@ -277,7 +278,7 @@ export default function LeadsManager({
                   </p>
                 </div>
               ))}
-              {customFields.length === 0 && (
+              {safeCustomFields.length === 0 && (
                 <p className="text-gray-400 text-xs italic col-span-3">
                   No custom fields configured.
                 </p>

@@ -7,7 +7,6 @@ export default function TeamManager({ apiUrl, currentUser, onShowToast }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // NEW: State to track which user is being deleted
   const [userToDelete, setUserToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -18,34 +17,37 @@ export default function TeamManager({ apiUrl, currentUser, onShowToast }) {
   const fetchUsers = async () => {
     try {
       const res = await axios.get(`${apiUrl}/users`);
-      setUsers(res.data);
+
+      // ✅ SAFETY CHECK: Only set state if it's actually an array
+      if (Array.isArray(res.data)) {
+        setUsers(res.data);
+      } else {
+        console.warn("API returned invalid team data:", res.data);
+        setUsers([]); // Fallback to empty list
+      }
       setLoading(false);
     } catch (error) {
       console.error(error);
+      setUsers([]); // Safety fallback
       setLoading(false);
     }
   };
 
-  // 1. Trigger the Confirmation Bar (No browser alert)
   const initiateDelete = (user) => {
     setUserToDelete(user);
   };
 
-  // 2. Actually execute the delete
   const confirmDelete = async () => {
     if (!userToDelete) return;
 
     setIsDeleting(true);
     try {
-      // Encode email because it contains "@" which can break URLs
       await axios.delete(
         `${apiUrl}/users/${encodeURIComponent(userToDelete.email)}`
       );
-
-      // Update UI immediately
       setUsers(users.filter((u) => u.email !== userToDelete.email));
       onShowToast("User removed from organization", "success");
-      setUserToDelete(null); // Close the bar
+      setUserToDelete(null);
     } catch (error) {
       console.error(error);
       const msg = error.response?.data?.error || "Failed to delete user";
@@ -77,9 +79,10 @@ export default function TeamManager({ apiUrl, currentUser, onShowToast }) {
         {loading ? (
           <div className="p-8 text-center text-gray-400">Loading team...</div>
         ) : (
-          users.map((user) => (
+          // ✅ SAFE MAP: Use optional chaining or fallback just in case
+          (users || []).map((user) => (
             <div
-              key={user.userId}
+              key={user.userId || user.email}
               className={`grid grid-cols-12 p-4 items-center border-b border-gray-100 transition ${
                 userToDelete?.email === user.email
                   ? "bg-red-50"
@@ -89,10 +92,12 @@ export default function TeamManager({ apiUrl, currentUser, onShowToast }) {
               {/* Name */}
               <div className="col-span-4 flex items-center gap-3">
                 <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold">
-                  {user.name.charAt(0).toUpperCase()}
+                  {(user.name || "?").charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800">{user.name}</p>
+                  <p className="font-semibold text-gray-800">
+                    {user.name || "Unknown"}
+                  </p>
                   {user.email === currentUser.email && (
                     <span className="text-xs text-green-600 font-medium">
                       (You)
@@ -137,6 +142,13 @@ export default function TeamManager({ apiUrl, currentUser, onShowToast }) {
               </div>
             </div>
           ))
+        )}
+
+        {/* Empty State Message */}
+        {!loading && users.length === 0 && (
+          <div className="p-8 text-center text-gray-400 italic">
+            No team members found.
+          </div>
         )}
       </div>
 

@@ -317,3 +317,35 @@ module.exports.seedData = async (event) => {
     return sendResponse(500, { error: err.message });
   }
 };
+
+module.exports.updateLead = async (event) => {
+  try {
+    const { orgId } = getAuth(event);
+    const leadId = event.pathParameters.id;
+    const { status } = JSON.parse(event.body);
+
+    // Update only the status field
+    await dynamoDb
+      .update({
+        TableName: TABLE_NAME,
+        Key: {
+          PK: `ORG#${orgId}`,
+          SK: `LEAD#${leadId}`,
+        },
+        UpdateExpression: "set #status = :status",
+        ExpressionAttributeNames: {
+          "#status": "status",
+        },
+        ExpressionAttributeValues: {
+          ":status": status,
+        },
+        ReturnValues: "ALL_NEW",
+      })
+      .promise();
+
+    return sendResponse(200, { message: "Lead updated", id: leadId, status });
+  } catch (err) {
+    console.error(err);
+    return sendResponse(500, { error: err.message });
+  }
+};

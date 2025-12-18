@@ -9,6 +9,7 @@ import LeadsManager from "./components/LeadsManager";
 import Settings from "./components/Settings";
 import TeamManager from "./components/TeamManager"; // Ensure you have this imported
 import NotificationToast from "./components/NotificationToast";
+import KanbanBoard from "./components/KanbanBoard";
 
 // 🔴 REPLACE WITH YOUR AWS API URL
 const BASE_API = import.meta.env.VITE_API_URL;
@@ -85,10 +86,16 @@ export default function App() {
   const fetchLeads = async () => {
     try {
       const res = await axios.get(`${BASE_API}/leads`);
-      setLeads(res.data);
+
+      // ✅ FIX: Ensure we only set an array
+      if (Array.isArray(res.data)) {
+        setLeads(res.data);
+      } else {
+        console.warn("API returned non-array data:", res.data);
+        setLeads([]); // Fallback to empty array
+      }
     } catch (error) {
       console.error("Error fetching leads:", error);
-      // If token is expired (401), force logout
       if (error.response?.status === 401) handleLogout();
     }
   };
@@ -96,9 +103,17 @@ export default function App() {
   const fetchSettings = async () => {
     try {
       const res = await axios.get(`${BASE_API}/settings/fields`);
-      setCustomFields(res.data || []);
+
+      // ✅ FIX: Only save if it's a real array
+      if (Array.isArray(res.data)) {
+        setCustomFields(res.data);
+      } else {
+        console.warn("Invalid custom fields data:", res.data);
+        setCustomFields([]); // Fallback to empty
+      }
     } catch (error) {
       console.error("Error fetching settings:", error);
+      setCustomFields([]); // Safety fallback
     }
   };
 
@@ -185,6 +200,14 @@ export default function App() {
                   apiUrl={BASE_API}
                   currentUser={user}
                   onShowToast={showToast}
+                />
+              )}
+
+              {view === "kanban" && (
+                <KanbanBoard
+                  leads={leads}
+                  onLeadUpdated={fetchLeads} // Reload data after drop
+                  apiUrl={`${BASE_API}/leads`} // Endpoint base
                 />
               )}
 

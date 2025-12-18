@@ -1,6 +1,7 @@
 import {
   Activity,
   LayoutDashboard,
+  LayoutList,
   Users,
   LogOut,
   Settings,
@@ -31,16 +32,22 @@ export default function Sidebar({ view, setView, onLogout }) {
             label="Leads CRM"
           />
           <NavButton
-            active={view === "settings"}
-            onClick={() => setView("settings")}
-            icon={<Settings className="w-5 h-5" />}
-            label="Configuration"
-          />
-          <NavButton
             active={view === "team"}
             onClick={() => setView("team")}
             icon={<Users className="w-5 h-5" />}
             label="Team"
+          />
+          <NavButton
+            active={view === "kanban"}
+            onClick={() => setView("kanban")}
+            icon={<LayoutList className="w-5 h-5" />}
+            label="Pipeline"
+          />
+          <NavButton
+            active={view === "settings"}
+            onClick={() => setView("settings")}
+            icon={<Settings className="w-5 h-5" />}
+            label="Configuration"
           />
         </nav>
       </div>

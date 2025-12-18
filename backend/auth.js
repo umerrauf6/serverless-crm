@@ -10,7 +10,7 @@ const TABLE_NAME = process.env.TABLE_NAME;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // 🔴 CRITICAL: Replace with the email you verified in AWS SES
-const SENDER_EMAIL = "your-verified-email@example.com";
+const SENDER_EMAIL = "umerrauf6@gmail.com";
 
 const sendResponse = (statusCode, body) => ({
   statusCode,
