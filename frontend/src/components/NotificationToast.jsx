@@ -22,7 +22,7 @@ export default function NotificationToast({ notification, onClose }) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.9 }}
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="fixed top-6 left-1/2 transform -translate-x-1/2 z-[100] min-w-[320px] max-w-md"
+          className="fixed top-6 left-1/2 transform -translate-x-1/2 z-[100] w-[90vw] sm:w-auto sm:min-w-[320px] max-w-md"
           style={{ translateX: "-50%" }} // Fixes centering issue with Framer Motion
         >
           <div

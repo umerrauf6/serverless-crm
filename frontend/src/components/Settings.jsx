@@ -68,7 +68,7 @@ export default function Settings({
   };
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
+    <div className="p-4 md:p-8 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold text-gray-800 mb-2">
         System Configuration
       </h1>
@@ -77,7 +77,7 @@ export default function Settings({
       </p>
 
       {/* --- CUSTOM FIELDS SECTION --- */}
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
+      <div className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg font-bold text-gray-700">
             Lead Custom Fields
@@ -92,7 +92,10 @@ export default function Settings({
 
         <div className="space-y-4">
           {fields.map((field, index) => (
-            <div key={index} className="flex gap-4 items-center">
+            <div
+              key={index}
+              className="flex flex-col sm:flex-row gap-4 items-start sm:items-center"
+            >
               <input
                 className="flex-1 p-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                 placeholder="Field Label (e.g. Budget)"
@@ -127,7 +130,7 @@ export default function Settings({
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-black transition flex items-center gap-2 shadow-lg"
+            className="w-full sm:w-auto bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-black transition flex items-center justify-center gap-2 shadow-lg"
           >
             {isSaving ? (
               "Saving..."
@@ -141,7 +144,7 @@ export default function Settings({
       </div>
 
       {/* --- NEW: DEVELOPER ZONE --- */}
-      <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-2xl border border-gray-200 border-dashed">
+      <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 md:p-6 rounded-2xl border border-gray-200 border-dashed">
         <div className="flex items-center gap-3 mb-4">
           <div className="bg-amber-100 p-2 rounded-lg text-amber-600">
             <Database className="w-5 h-5" />

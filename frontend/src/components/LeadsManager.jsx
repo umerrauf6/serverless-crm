@@ -122,9 +122,9 @@ export default function LeadsManager({
   );
 
   return (
-    <div className="flex h-full gap-6 p-6 relative">
+    <div className="flex flex-col lg:flex-row h-full gap-4 lg:gap-6 p-4 lg:p-6 relative">
       {/* --- LEFT COLUMN: LIST & FORM --- */}
-      <div className="w-1/3 min-w-[320px] bg-white rounded-2xl shadow-sm border border-gray-200 flex flex-col overflow-hidden">
+      <div className="w-full lg:w-1/3 lg:min-w-[320px] h-1/2 lg:h-full bg-white rounded-2xl shadow-sm border border-gray-200 flex flex-col overflow-hidden">
         {/* Search & Add Form Container */}
         <div className="p-4 border-b border-gray-100 bg-gray-50/50 space-y-4">
           {/* Search Bar */}
@@ -243,7 +243,7 @@ export default function LeadsManager({
       </div>
 
       {/* --- RIGHT COLUMN: DETAILS & HISTORY --- */}
-      <div className="flex-1 bg-white rounded-2xl shadow-sm border border-gray-200 p-8 flex flex-col relative overflow-hidden">
+      <div className="w-full lg:flex-1 h-1/2 lg:h-full bg-white rounded-2xl shadow-sm border border-gray-200 p-4 lg:p-8 flex flex-col relative overflow-hidden">
         {selectedLead ? (
           <>
             {/* Lead Header */}

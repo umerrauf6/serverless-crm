@@ -63,8 +63,8 @@ export default function KanbanBoard({ leads, onLeadUpdated, apiUrl }) {
   };
 
   return (
-    <div className="h-full flex flex-col p-6 overflow-hidden">
-      <div className="flex justify-between items-center mb-6">
+    <div className="h-full flex flex-col p-4 md:p-6 overflow-hidden">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2 sm:gap-0">
         <h1 className="text-2xl font-bold text-gray-800">Pipeline Board</h1>
         <div className="text-sm text-gray-500">Drag cards to update status</div>
       </div>

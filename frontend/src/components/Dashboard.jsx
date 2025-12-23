@@ -23,7 +23,7 @@ export default function Dashboard({ leads = [] }) {
       : 0;
 
   return (
-    <div className="p-8 h-full overflow-y-auto">
+    <div className="p-4 md:p-8 h-full overflow-y-auto">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
         Dashboard Overview
       </h1>
