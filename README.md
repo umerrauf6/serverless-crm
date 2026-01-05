@@ -1,11 +1,8 @@
-Here is a professional **README.md** file for your project. You can copy-paste this directly into the root of your repository or your `README.md` file.
-
----
-
 # 🚀 Serverless CRM
 
 A modern, multi-tenant Customer Relationship Management (CRM) system built with **React** (Vite) and **AWS Serverless** (Lambda, DynamoDB). This application features secure authentication, lead management with a Kanban pipeline, team collaboration, and dynamic custom fields.
 
+https://serverless-crm.vercel.app/
 ---
 
 ## ✨ Features
