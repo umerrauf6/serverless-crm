@@ -135,7 +135,3 @@ npm run dev
 │   └── vite.config.js     # Vite configuration
 
 ```
-4. Add the Environment Variable: `VITE_API_URL`.
-5. Deploy!
-
----
