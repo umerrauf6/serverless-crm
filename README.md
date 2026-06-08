@@ -135,27 +135,6 @@ npm run dev
 │   └── vite.config.js     # Vite configuration
 
 ```
-
----
-
-## 🌍 Deployment
-
-### **Backend**
-
-Deploy updates instantly with:
-
-```bash
-cd backend && npx serverless deploy
-
-```
-
-### **Frontend**
-
-This project is optimized for **Vercel**.
-
-1. Push your code to GitHub.
-2. Import the repo into Vercel.
-3. Set the Root Directory to `frontend`.
 4. Add the Environment Variable: `VITE_API_URL`.
 5. Deploy!
 
