@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 // COMPONENTS
+import LandingPage from "./components/LandingPage";
 import AuthScreen from "./components/AuthScreen";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./components/Dashboard";
@@ -18,6 +19,11 @@ export default function App() {
   // --- STATE ---
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+
+  // appView: 'landing' | 'auth' | 'portal'
+  const [appView, setAppView] = useState("landing");
+  // authMode hint: 'LOGIN' | 'SIGNUP'
+  const [authStartMode, setAuthStartMode] = useState("LOGIN");
 
   const [view, setView] = useState("dashboard");
   const [leads, setLeads] = useState([]);
@@ -40,6 +46,7 @@ export default function App() {
       // Fetch fresh data in background
       fetchLeads();
       fetchSettings();
+      setAppView("portal"); // Skip landing for returning users
     }
     setIsLoading(false); // Done checking
   }, []);
@@ -66,6 +73,9 @@ export default function App() {
     fetchLeads();
     fetchSettings();
     showToast(`Welcome back, ${userData.name}!`, "success");
+
+    // 5. Go to portal
+    setAppView("portal");
   };
 
   const handleLogout = () => {
@@ -80,6 +90,9 @@ export default function App() {
 
     delete axios.defaults.headers.common["Authorization"];
     showToast("Logged out successfully", "warning");
+
+    // 3. Return to landing page
+    setAppView("landing");
   };
 
   // --- API FETCHERS ---
@@ -129,11 +142,32 @@ export default function App() {
         onClose={() => setNotification(null)}
       />
 
-      {/* 2. IF NOT LOGGED IN -> SHOW LOGIN SCREEN */}
-      {!user ? (
-        <AuthScreen onAuthenticated={handleAuth} onShowToast={showToast} />
-      ) : (
-        /* 3. IF LOGGED IN -> SHOW DASHBOARD */
+      {/* LANDING PAGE */}
+      {appView === "landing" && (
+        <LandingPage
+          onGetStarted={() => {
+            setAuthStartMode("SIGNUP");
+            setAppView("auth");
+          }}
+          onLogin={() => {
+            setAuthStartMode("LOGIN");
+            setAppView("auth");
+          }}
+        />
+      )}
+
+      {/* AUTH SCREEN */}
+      {appView === "auth" && (
+        <AuthScreen
+          onAuthenticated={handleAuth}
+          onShowToast={showToast}
+          initialMode={authStartMode}
+          onBackToLanding={() => setAppView("landing")}
+        />
+      )}
+
+      {/* PORTAL — only shown when appView === 'portal' and user is set */}
+      {appView === "portal" && user && (
         <div className="flex h-screen w-full bg-gray-50 text-gray-800 font-sans overflow-hidden">
           <Sidebar view={view} setView={setView} onLogout={handleLogout} />
 

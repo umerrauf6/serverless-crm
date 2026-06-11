@@ -15,9 +15,9 @@ import axios from "axios";
 // 🔴 Ensure your .env file has VITE_API_URL defined
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function AuthScreen({ onAuthenticated, onShowToast }) {
+export default function AuthScreen({ onAuthenticated, onShowToast, initialMode = "LOGIN", onBackToLanding }) {
   // MODES: 'LOGIN' | 'SIGNUP' | 'FORGOT_EMAIL' | 'FORGOT_CODE'
-  const [authMode, setAuthMode] = useState("LOGIN");
+  const [authMode, setAuthMode] = useState(initialMode);
   const [isJoining, setIsJoining] = useState(false); // Toggle for "Create" vs "Join" in Signup
   const [isLoading, setIsLoading] = useState(false);
 
@@ -105,7 +105,16 @@ export default function AuthScreen({ onAuthenticated, onShowToast }) {
   };
 
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-gray-50">
+    <div className="flex h-screen w-full items-center justify-center bg-gray-50 relative">
+      {/* Back to landing */}
+      {onBackToLanding && (
+        <button
+          onClick={onBackToLanding}
+          className="absolute top-5 left-5 flex items-center gap-1.5 text-sm text-gray-400 hover:text-indigo-600 transition font-medium"
+        >
+          <span>←</span> Back to Home
+        </button>
+      )}
       <motion.div
         layout
         initial={{ opacity: 0, y: 20 }}
